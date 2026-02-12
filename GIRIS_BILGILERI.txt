@@ -1,0 +1,22 @@
+===========================================
+  MARKETBANK GİRİŞ BİLGİLERİ
+===========================================
+
+ADMIN GİRİŞİ:
+-------------
+Kullanıcı ID: ADMIN_U
+Şifre: admin
+
+KASİYER GİRİŞİ:
+--------------
+Kullanıcı ID: WORKER_1
+Şifre: 123
+
+NOTLAR:
+-------
+1. Kullanıcı ID'sini BÜYÜK HARFLE yazın (ADMIN_U)
+2. Şifre küçük harfle yazılır (admin veya 123)
+3. Sunucunun çalıştığından emin olun (baslat.bat)
+4. Tarayıcıda http://localhost:5000 adresine gidin
+
+===========================================

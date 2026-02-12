@@ -1,0 +1,574 @@
+{
+    "users": {
+        "ADMIN_U": {
+            "name": "Süper Admin",
+            "role": "admin",
+            "balance": 999999,
+            "password": "admin",
+            "limit": 999999,
+            "iban": "MBANK-86225"
+        },
+        "WORKER_1": {
+            "name": "Kasiyer Ahmet",
+            "role": "worker",
+            "balance": 5000,
+            "password": "123",
+            "limit": 0,
+            "iban": "MBANK-92578"
+        },
+        "USER_1770573640": {
+            "name": "We",
+            "role": "customer",
+            "balance": 5000,
+            "points": 0,
+            "tier": "Bronze",
+            "iban": "MBANK-60194"
+        },
+        "USER_1770578563": {
+            "name": "Voltmetre ",
+            "role": "customer",
+            "balance": 8361.0,
+            "points": 109,
+            "tier": "Gold",
+            "iban": "MBANK-87771"
+        },
+        "USER_1770664008": {
+            "name": "Musteri 91",
+            "role": "customer",
+            "balance": 700,
+            "points": 0
+        },
+        "USER_1770664078": {
+            "name": "Musteri 75",
+            "role": "customer",
+            "balance": 600,
+            "points": 0
+        },
+        "USER_1770664083": {
+            "name": "Musteri 82",
+            "role": "customer",
+            "balance": 500,
+            "points": 0
+        },
+        "USER_1770664145": {
+            "name": "Musteri 26",
+            "role": "customer",
+            "balance": 800,
+            "points": 0
+        },
+        "USER_1770664302": {
+            "name": "Musteri 54",
+            "role": "customer",
+            "balance": 500,
+            "points": 0
+        },
+        "USER_1770664342": {
+            "name": "Musteri 60",
+            "role": "customer",
+            "balance": 500,
+            "points": 0
+        },
+        "USER_1770665026": {
+            "name": "Musteri 1",
+            "role": "customer",
+            "balance": 700,
+            "points": 0
+        },
+        "USER_1770665273": {
+            "name": "Musteri 3",
+            "role": "customer",
+            "balance": 500,
+            "points": 0
+        },
+        "USER_10": {
+            "name": "Test Musteri 10",
+            "role": "customer",
+            "balance": 500,
+            "points": 0
+        },
+        "USER_20": {
+            "name": "Test Musteri 20",
+            "role": "customer",
+            "balance": 500,
+            "points": 0
+        },
+        "USER_30": {
+            "name": "Test Musteri 30",
+            "role": "customer",
+            "balance": 500,
+            "points": 0
+        },
+        "USER_1770668393": {
+            "name": "Musteri 5",
+            "role": "customer",
+            "balance": 1300,
+            "points": 0
+        },
+        "USER_1770669916": {
+            "name": "Musteri 36",
+            "role": "customer",
+            "balance": 1600,
+            "points": 0,
+            "tier": "Bronze"
+        },
+        "USER_1770671436": {
+            "name": "Voltmetre ",
+            "role": "customer",
+            "balance": 4.477865566e+42,
+            "points": 4110000000058605,
+            "tier": "Gold"
+        },
+        "USER_1770732302": {
+            "name": "Musteri 58",
+            "role": "customer",
+            "balance": 500,
+            "points": 0,
+            "tier": "Bronze"
+        },
+        "USER_1770732310": {
+            "name": "Musteri 63",
+            "role": "customer",
+            "balance": 600,
+            "points": 0,
+            "tier": "Bronze"
+        },
+        "USER_1770824039": {
+            "name": "Musteri 47",
+            "role": "customer",
+            "balance": 600,
+            "points": 0,
+            "tier": "Bronze"
+        },
+        "USER_1770830741": {
+            "name": "Musteri 50",
+            "role": "customer",
+            "balance": 500,
+            "points": 0,
+            "tier": "Bronze"
+        },
+        "USER_1770910782": {
+            "name": "Musteri 9",
+            "role": "customer",
+            "balance": 500,
+            "points": 0,
+            "tier": "Bronze"
+        },
+        "USER_1770911201": {
+            "name": "Musteri 7",
+            "role": "customer",
+            "balance": 500,
+            "points": 0,
+            "tier": "Bronze"
+        },
+        "USER_1770915791": {
+            "name": "Musteri 23",
+            "role": "customer",
+            "balance": 500,
+            "points": 0,
+            "tier": "Bronze"
+        }
+    },
+    "cards": {
+        "000000": "ADMIN_U",
+        "55": "USER_1770573640",
+        "123456": "KASIYER_1",
+        "04147032B51A95": "USER_1770578563",
+        "91": "USER_1770664008",
+        "75": "USER_1770664078",
+        "82": "USER_1770664083",
+        "26": "USER_1770664145",
+        "54": "USER_1770664302",
+        "60": "USER_1770664342",
+        "1": "USER_1770665026",
+        "3": "USER_1770665273",
+        "10": "USER_10",
+        "20": "USER_20",
+        "30": "USER_30",
+        "5": "USER_1770668393",
+        "36": "USER_1770669916",
+        "058D916B324300": "USER_1770671436",
+        "8": "USER_1770671436",
+        "58": "USER_1770732302",
+        "63": "USER_1770732310",
+        "47": "USER_1770824039",
+        "50": "USER_1770830741",
+        "9": "USER_1770910782",
+        "7": "USER_1770911201",
+        "23": "USER_1770915791"
+    },
+    "products": {
+        "9786057185778": {
+            "name": "Youtube ",
+            "price": 44,
+            "stock": 65,
+            "min_stock": 10,
+            "category": "Genel"
+        },
+        "11": {
+            "name": "Ekmek ",
+            "price": 15,
+            "stock": 90,
+            "min_stock": 10,
+            "category": "Genel"
+        },
+        "23": {
+            "name": "Kalemlem",
+            "price": 5,
+            "stock": 90,
+            "min_stock": 10,
+            "category": "Genel"
+        },
+        "Q": {
+            "name": "3",
+            "price": 400000000005666.0,
+            "stock": 86,
+            "min_stock": 10,
+            "category": "Genel"
+        },
+        "9786057575654": {
+            "name": "Www",
+            "price": 2223.0,
+            "stock": 1004444554,
+            "min_stock": 10,
+            "category": "Genel"
+        }
+    },
+    "reports": {
+        "daily_sales": 4.150000000059323e+16,
+        "transactions": [
+            {
+                "time": "22:05:05",
+                "amount": 44,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 1
+                    }
+                ],
+                "payment": "qr"
+            },
+            {
+                "time": "22:05:16",
+                "amount": 44,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 1
+                    }
+                ],
+                "payment": "cash"
+            },
+            {
+                "time": "22:23:58",
+                "amount": 44,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 1
+                    }
+                ],
+                "payment": "card",
+                "card_id": "04147032B51A95"
+            },
+            {
+                "time": "22:27:02",
+                "amount": 44,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 1
+                    }
+                ],
+                "payment": "card",
+                "card_id": "04147032B51A95"
+            },
+            {
+                "time": "22:27:20",
+                "amount": 484,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 11
+                    }
+                ],
+                "payment": "card",
+                "card_id": "04147032B51A95"
+            },
+            {
+                "time": "22:27:32",
+                "amount": 132,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 3
+                    }
+                ],
+                "payment": "qr"
+            },
+            {
+                "time": "22:27:43",
+                "amount": 132,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 3
+                    }
+                ],
+                "payment": "cash"
+            },
+            {
+                "time": "22:28:05",
+                "amount": 220,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 5
+                    }
+                ],
+                "payment": "card",
+                "card_id": "04147032B51A95"
+            },
+            {
+                "time": "23:34:37",
+                "amount": 176,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 4
+                    }
+                ],
+                "payment": "card",
+                "card_id": "04147032B51A95"
+            },
+            {
+                "time": "23:36:41",
+                "amount": 148,
+                "cashier": "Süper Admin",
+                "items": [
+                    {
+                        "barcode": "11",
+                        "name": "Ekmek ",
+                        "price": 15,
+                        "qty": 4
+                    },
+                    {
+                        "barcode": "9786057185778",
+                        "name": "Youtube ",
+                        "price": 44,
+                        "qty": 2
+                    }
+                ],
+                "payment": "card",
+                "card_id": "04147032B51A95"
+            },
+            {
+                "time": "00:09:21",
+                "amount": 5.0,
+                "cashier": "Süper Admin",
+                "payment": "cash"
+            },
+            {
+                "time": "00:11:55",
+                "amount": 5.0,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "058D916B324300"
+            },
+            {
+                "time": "00:12:59",
+                "amount": 5.0,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "058D916B324300"
+            },
+            {
+                "time": "00:14:38",
+                "amount": 64.0,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "058D916B324300"
+            },
+            {
+                "time": "00:16:38",
+                "amount": 800000000011332.0,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "058D916B324300"
+            },
+            {
+                "time": "00:18:46",
+                "amount": 300000000005667.0,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "058D916B324300"
+            },
+            {
+                "time": "00:20:57",
+                "amount": 25.0,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "058D916B324300"
+            },
+            {
+                "time": "17:13:40",
+                "amount": 400000000005666.0,
+                "cashier": "Süper Admin",
+                "payment": "cash"
+            },
+            {
+                "time": "17:43:04",
+                "amount": 15.0,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "8"
+            },
+            {
+                "time": "19:17:28",
+                "amount": 2000000000030706.0,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "8"
+            },
+            {
+                "time": "20:00:47",
+                "amount": 3.800000000053827e+16,
+                "cashier": "Süper Admin",
+                "payment": "card",
+                "card_id": "8"
+            }
+        ],
+        "stock_logs": []
+    },
+    "approvals": [
+        {
+            "id": 1770577501,
+            "type": "refund",
+            "details": "1",
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770582973,
+            "type": "refund",
+            "details": "1",
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770583058,
+            "type": "discount",
+            "details": "5 TL İndirim Uygulama",
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770583064,
+            "type": "discount",
+            "details": "5 TL İndirim Uygulama",
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770671892,
+            "type": "discount",
+            "details": "8855 TL İndirim Uygulama",
+            "amount": 8855,
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770671911,
+            "type": "discount",
+            "details": "99999999999999 TL İndirim Uygulama",
+            "amount": 99999999999999,
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770732788,
+            "type": "refund",
+            "details": "w",
+            "amount": 0,
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770732806,
+            "type": "refund",
+            "details": "111111",
+            "amount": 0,
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770732850,
+            "type": "refund",
+            "details": "yuns",
+            "amount": 0,
+            "cashier": "Süper Admin",
+            "status": "approved"
+        },
+        {
+            "id": 1770915553,
+            "type": "discount",
+            "details": "5576455327 TL İndirim Uygulama",
+            "amount": 5576455327,
+            "cashier": "Süper Admin",
+            "status": "approved"
+        }
+    ],
+    "vouchers": {
+        "9579": {
+            "amount": 99.0,
+            "created_at": 1770734317.4121892
+        },
+        "3275": {
+            "amount": 5.0,
+            "created_at": 1770743394.6648066
+        },
+        "7399": {
+            "amount": 413.0,
+            "created_at": 1770824061.3478906
+        },
+        "7840": {
+            "amount": 92.0,
+            "created_at": 1770910797.3621752
+        },
+        "3210": {
+            "amount": 10.0,
+            "created_at": 1770915815.0329933
+        },
+        "1197": {
+            "amount": 105.0,
+            "created_at": 1770915826.4850361
+        }
+    },
+    "stores": {}
+}

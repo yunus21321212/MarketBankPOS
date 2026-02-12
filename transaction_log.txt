@@ -1,0 +1,114 @@
+[2026-02-08 20:50:59] [GIRIS] Kasiyer Ahmet: Kasiyer Ahmet sisteme giriş yaptı.
+[2026-02-08 20:51:17] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 20:56:36] [GIRIS] Kasiyer Ahmet: Kasiyer Ahmet sisteme giriş yaptı.
+[2026-02-08 20:57:34] [GIRIS] Kasiyer Ahmet: Kasiyer Ahmet sisteme giriş yaptı.
+[2026-02-08 20:58:26] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:00:40] [KART_TANITMA] Sistem: Yeni Müşteri: We
+[2026-02-08 21:02:13] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:06:28] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:41:00] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:41:00] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:41:00] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:41:00] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:41:00] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:46:45] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:52:04] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 21:58:50] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:03:30] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:03:47] [URUN_EKLE] Admin: Yeni Ürün: Youtube  (9786057185778)
+[2026-02-08 22:05:05] [SATIŞ] Süper Admin: Toplam: 44 TL, Ödeme: qr
+[2026-02-08 22:05:16] [SATIŞ] Süper Admin: Toplam: 44 TL, Ödeme: cash
+[2026-02-08 22:07:10] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:10:47] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:13:34] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:18:12] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:18:12] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:18:12] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:18:12] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:18:12] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:18:12] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:18:12] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:21:45] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 22:22:43] [KART_TANITMA] Sistem: Yeni Müşteri: Voltmetre 
+[2026-02-08 22:23:58] [SATIŞ] Süper Admin: NFC İLE TAMAMLANDI: 44 TL
+[2026-02-08 22:27:02] [SATIŞ] Süper Admin: NFC İLE TAMAMLANDI: 44 TL
+[2026-02-08 22:27:20] [SATIŞ] Süper Admin: NFC İLE TAMAMLANDI: 484 TL
+[2026-02-08 22:27:32] [SATIŞ] Süper Admin: Toplam: 132 TL, Ödeme: qr
+[2026-02-08 22:27:43] [SATIŞ] Süper Admin: Toplam: 132 TL, Ödeme: cash
+[2026-02-08 22:28:05] [SATIŞ] Süper Admin: NFC İLE TAMAMLANDI: 220 TL
+[2026-02-08 23:32:04] [GIRIS] Süper Admin: Süper Admin sisteme giriş yaptı.
+[2026-02-08 23:34:37] [SATIŞ] Süper Admin: NFC İLE TAMAMLANDI: 176 TL
+[2026-02-08 23:35:47] [URUN_EKLE] Admin: Yeni Ürün: Ekmek  (11)
+[2026-02-08 23:36:41] [SATIŞ] Süper Admin: NFC İLE TAMAMLANDI: 148 TL
+[2026-02-08 23:37:26] [URUN_EKLE] Admin: Yeni Ürün: Kalemlem (23)
+[2026-02-09 22:06:48] [KART_TANITMA] Sistem: Arduino ile Yeni: 91
+[2026-02-09 22:07:58] [KART_TANITMA] Sistem: Arduino ile Yeni: 75
+[2026-02-09 22:08:03] [KART_TANITMA] Sistem: Arduino ile Yeni: 82
+[2026-02-09 22:08:30] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 91
+[2026-02-09 22:08:42] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 91
+[2026-02-09 22:09:05] [KART_TANITMA] Sistem: Arduino ile Yeni: 26
+[2026-02-09 22:11:42] [KART_TANITMA] Sistem: Arduino ile Yeni: 54
+[2026-02-09 22:12:22] [KART_TANITMA] Sistem: Arduino ile Yeni: 60
+[2026-02-09 22:23:46] [KART_TANITMA] Sistem: Arduino ile Yeni: 1
+[2026-02-09 22:27:53] [KART_TANITMA] Sistem: Arduino ile Yeni: 3
+[2026-02-09 23:03:41] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-09 23:05:51] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-09 23:15:36] [GIRIS] Kasiyer Ahmet: Kasiyer Ahmet giris yapti.
+[2026-02-09 23:19:53] [KART_TANITMA] Sistem: Arduino ile Yeni: 5
+[2026-02-09 23:20:05] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 5
+[2026-02-09 23:20:08] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 5
+[2026-02-09 23:20:14] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 5
+[2026-02-09 23:20:17] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 5
+[2026-02-09 23:20:20] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 5
+[2026-02-09 23:20:22] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 5
+[2026-02-09 23:20:25] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 5
+[2026-02-09 23:20:28] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 5
+[2026-02-09 23:22:09] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 26
+[2026-02-09 23:22:20] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 26
+[2026-02-09 23:22:32] [BAKIYE_YUKLE] Sistem: Arduino ile 100 TL -> 26
+[2026-02-09 23:50:15] [GIRIS] Kasiyer Ahmet: Kasiyer Ahmet giris yapti.
+[2026-02-09 23:50:50] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-09 23:54:42] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-09 23:58:48] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-10 00:06:24] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-10 00:06:50] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-10 00:07:02] [BAKIYE_YUKLE] Arduino: NFC: 4477.0 TL
+[2026-02-10 00:09:21] [SATIS] Süper Admin: NAKIT: 5.0 TL
+[2026-02-10 00:11:55] [SATIS] Arduino: NFC: 5.0 TL
+[2026-02-10 00:12:59] [SATIS] Arduino: NFC: 5.0 TL
+[2026-02-10 00:13:18] [BAKIYE_YUKLE] Arduino: NFC: 4477865565.0 TL
+[2026-02-10 00:14:38] [SATIS] Arduino: NFC: 64.0 TL
+[2026-02-10 00:16:10] [BAKIYE_YUKLE] Arduino: NFC: 4.477865566e+24 TL
+[2026-02-10 00:16:38] [SATIS] Arduino: NFC: 800000000011332.0 TL
+[2026-02-10 00:17:06] [BAKIYE_YUKLE] Arduino: NFC: 4.477865566e+42 TL
+[2026-02-10 00:18:46] [SATIS] Arduino: NFC: 300000000005667.0 TL
+[2026-02-10 00:20:57] [SATIS] Arduino: NFC: 25.0 TL
+[2026-02-10 17:12:01] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-10 17:13:40] [SATIS] Süper Admin: NAKIT: 400000000005666.0 TL
+[2026-02-10 17:26:55] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-10 17:41:35] [KUPON_YUKLE] Voltmetre : Pin: 4018, Tutar: 99.0 TL
+[2026-02-10 17:42:35] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-10 17:43:04] [SATIS] Arduino: NFC: 15.0 TL
+[2026-02-10 17:49:49] [KUPON_YUKLE] Voltmetre : Pin: 7748, Tutar: 91.0 TL
+[2026-02-10 20:08:54] [KUPON_YUKLE] Voltmetre : Pin: 9119, Tutar: 31.0 TL
+[2026-02-10 20:30:22] [GUVENLIK_ALARM] Sistem: ADMIN CIHAZI BLOKE EDILDI! (3 Yanlis Giris)
+[2026-02-10 20:33:19] [GUVENLIK_ALARM] Sistem: ADMIN CIHAZI BLOKE EDILDI! (3 Yanlis Giris)
+[2026-02-10 20:36:33] [GUVENLIK_RESET] Sistem: ADMIN CIHAZI UZAKTAN ACILDI
+[2026-02-10 20:39:22] [KUPON_YUKLE] Voltmetre : Pin: 4595, Tutar: 316.0 TL
+[2026-02-10 20:53:31] [GUVENLIK_ALARM] Sistem: ADMIN CIHAZI BLOKE EDILDI! (3 Yanlis Giris)
+[2026-02-10 20:54:22] [GUVENLIK_RESET] Sistem: ADMIN CIHAZI UZAKTAN ACILDI
+[2026-02-11 18:33:45] [KUPON_YUKLE] Voltmetre : Pin: 2228, Tutar: 209.0 TL
+[2026-02-11 19:35:54] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-11 19:39:50] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-11 19:39:54] [ARDUINO_UNLOCK] Admin: Arduino kilidi web'den açılma komutu verildi
+[2026-02-11 20:25:12] [ARDUINO_UNLOCK] Admin: Arduino kilidi web'den açılma komutu verildi
+[2026-02-11 20:33:23] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-11 21:10:15] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-12 16:42:26] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-12 16:42:30] [ARDUINO_UNLOCK] Admin: Arduino kilidi web'den açılma komutu verildi
+[2026-02-12 19:13:33] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-12 19:17:28] [SATIS] Arduino: NFC: 2000000000030706.0 TL
+[2026-02-12 19:23:12] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-12 19:58:33] [GIRIS] Süper Admin: Süper Admin giris yapti.
+[2026-02-12 20:00:47] [SATIS] Arduino: NFC: 3.800000000053827e+16 TL
+[2026-02-12 20:02:02] [GIRIS] Süper Admin: Süper Admin giris yapti.

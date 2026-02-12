@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketBank | Müşteri Banka Portalı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        :root {
+            --primary: #10b981;
+            /* Bank specific emerald color */
+            --accent: #3b82f6;
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #064e3b, #0f172a);
+        }
+
+        .bank-card {
+            border-top: 4px solid var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="glass-card"
+        style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem;">
+        <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary);">🏦 MarketBank <span
+                style="color:white; font-weight:300;">Banka</span></div>
+        <div style="display: flex; gap: 1rem;">
+            <a href="/" class="btn-secondary" style="text-decoration: none; font-size: 0.9rem;">Market Paneli</a>
+            <a href="/pos" class="btn-secondary" style="text-decoration: none; font-size: 0.9rem;">POS Simulator</a>
+        </div>
+    </nav>
+
+    <div class="container"
+        style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+
+        <!-- Left Side: Card Registration -->
+        <div class="glass-card bank-card">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary);">💳 Yeni Kart Kaydı</h2>
+            <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 2rem;">Gerçek kartınızı sisteme tanıtın ve
+                Arduino kısa kodunuzu belirleyin.</p>
+
+            <form id="reg-form" onsubmit="handleRegistration(event)">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Gerçek Kart ID
+                        / UID</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="reg-card" placeholder="Örn: 04147032B51A95" required
+                            style="margin-bottom:0; flex:1;">
+                        <button type="button" onclick="startScanner()" class="btn-secondary"
+                            style="padding: 10px;">📷</button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Arduino Kısa
+                        Kodu (1-99)</label>
+                    <input type="number" id="reg-short" placeholder="Keypad için kısa kod" min="1" max="99" required>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">İsim
+                        Soyisim</label>
+                    <input type="text" id="reg-name" placeholder="Müşteri İsmi" required>
+                </div>
+
+                <button type="submit"
+                    style="width: 100%; margin-top: 1rem; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">KARTI
+                    KAYDET</button>
+            </form>
+            <div id="reader"
+                style="width: 100%; margin-top: 1rem; border-radius: 12px; overflow: hidden; display: none;"></div>
+        </div>
+
+        <!-- Right Side: Balance & Loading -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+
+            <!-- Balance Checker -->
+            <div class="glass-card bank-card">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary);">💰 Bakiye Sorgula</h2>
+                <div style="display: flex; gap: 5px; margin-bottom: 1rem;">
+                    <input type="text" id="check-card" placeholder="Kart ID veya Kısa Kod"
+                        style="margin-bottom:0; flex:1;">
+                    <button onclick="checkBalance()" class="btn-secondary">SORGULA</button>
+                </div>
+                <div id="balance-result"
+                    style="display: none; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                    <div style="font-size: 0.8rem; color: #94a3b8;">Sayın <span id="res-name"
+                            style="color:white; font-weight:600;">-</span></div>
+                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary);" id="res-balance">0.00 TL
+                    </div>
+                </div>
+            </div>
+
+            <!-- Balance Loading -->
+            <div class="glass-card bank-card">
+                <h2 style="margin-bottom: 1.2rem; color: var(--primary);">💸 Para Yükle (NFC/QR)</h2>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 1rem;">Miktar belirleyin ve POS üzerinden
+                    kartınızı okutun.</p>
+                <form onsubmit="startLoad(event)">
+                    <input type="number" id="load-amount" placeholder="Yüklenecek Tutar (TL)" min="1" step="0.01"
+                        required>
+                    <button type="submit"
+                        style="width: 100%; background: #fff; color: #000; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer;">YÜKLEMEYİ
+                        BAŞLAT</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- POS Feedback Overlay (copied from index.html) -->
+    <div id="pos-overlay"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🏧</div>
+        <h2 style="color:var(--primary); margin-bottom: 10px;">POS İŞLEMİ BEKLENİYOR</h2>
+        <p style="color:#94a3b8;">Lütfen POS cihazından (simülatör veya donanım) kartınızı okutun.</p>
+        <div style="font-size: 2rem; font-weight: 600; margin-top: 30px;" id="wait-amount">0.00 TL</div>
+        <div class="loader-spinner" style="margin-top: 40px; width: 40px; height: 40px; border-width: 3px;"></div>
+        <button onclick="cancelPOS()"
+            style="margin-top: 50px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 30px; border-radius: 30px; cursor: pointer;">İptal
+            Et</button>
+    </div>
+
+    <!-- QR Scanner JS -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        let html5QrCode = null;
+
+        async function handleRegistration(e) {
+            e.preventDefault();
+            const data = {
+                card_id: document.getElementById('reg-card').value,
+                short_id: document.getElementById('reg-short').value,
+                name: document.getElementById('reg-name').value,
+                tier: 'Bronze'
+            };
+            const resp = await fetch('/api/kart_tanit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const res = await resp.json();
+            if (res.status === 'success') {
+                alert(res.message);
+                document.getElementById('reg-form').reset();
+            } else {
+                alert("Hata: " + res.message);
+            }
+        }
+
+        async function checkBalance() {
+            const cardId = document.getElementById('check-card').value;
+            if (!cardId) return;
+
+            const resp = await fetch('/api/bank/check_balance?card_id=' + cardId);
+            const res = await resp.json();
+            if (res.status === 'success') {
+                document.getElementById('balance-result').style.display = 'block';
+                document.getElementById('res-name').innerText = res.name;
+                document.getElementById('res-balance').innerText = res.balance.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + " TL";
+            } else {
+                alert("Kart bulunamadı!");
+                document.getElementById('balance-result').style.display = 'none';
+            }
+        }
+
+        async function startLoad(e) {
+            e.preventDefault();
+            const amount = document.getElementById('load-amount').value;
+            const resp = await fetch('/api/bank/load_nfc_start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: amount, cashier_id: 'Banka Portalı' })
+            });
+            const res = await resp.json();
+            if (res.status === 'success') {
+                document.getElementById('wait-amount').innerText = amount + " TL";
+                document.getElementById('pos-overlay').style.display = 'flex';
+                startPOSPolling();
+            } else {
+                alert("Yükleme başlatılamadı!");
+            }
+        }
+
+        let pollingInterval = null;
+        function startPOSPolling() {
+            if (pollingInterval) clearInterval(pollingInterval);
+            pollingInterval = setInterval(async () => {
+                const resp = await fetch('/api/transaction/status');
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    clearInterval(pollingInterval);
+                    document.getElementById('pos-overlay').style.display = 'none';
+                    alert("Para yükleme başarıyla tamamlandı! 💰");
+                    document.getElementById('load-amount').value = '';
+                } else if (data.status === 'failed') {
+                    clearInterval(pollingInterval);
+                    document.getElementById('pos-overlay').style.display = 'none';
+                    alert("İşlem reddedildi. ❌");
+                }
+            }, 1000);
+        }
+
+        function cancelPOS() {
+            clearInterval(pollingInterval);
+            document.getElementById('pos-overlay').style.display = 'none';
+            fetch('/api/admin/approve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ request_id: 'cancel', decision: 'cancelled' })
+            });
+        }
+
+        function startScanner() {
+            document.getElementById('reader').style.display = 'block';
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (decodedText) => {
+                document.getElementById('reg-card').value = decodedText;
+                stopScanner();
+            }).catch(e => { console.error(e); alert("Kamera başlatılamadı!"); });
+        }
+
+        function stopScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('reader').style.display = 'none';
+                    html5QrCode = null;
+                });
+            }
+        }
+
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+            }, 1000);
+        };
+    </script>
+</body>
+
+</html>

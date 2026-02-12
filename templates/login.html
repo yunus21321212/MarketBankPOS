@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketBank Kasa Girişi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">
+
+    <div class="login-container">
+        <h1>🏧 MarketBank Kasa</h1>
+        <p>Lütfen Kasiyer ID'nizi giriniz.</p>
+        
+        <input type="text" id="user-id" placeholder="Örn: WORKER_1" value="WORKER_1">
+        <button onclick="login()">GİRİŞ YAP</button>
+        <p id="error-msg" class="error"></p>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

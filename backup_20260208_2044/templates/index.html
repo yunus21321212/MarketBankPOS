@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketBank Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <!-- Premium Loader -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>MarketBank Hazırlanıyor...</p>
+    </div>
+
+    <div class="glass-container">
+        <nav>
+            <h1 class="logo">Market<span>Bank</span></h1>
+            <div class="user-info">
+                <span id="admin-name">Hoşgeldin, Admin</span>
+                <div class="status-dot"></div>
+            </div>
+        </nav>
+
+        <div class="dashboard-grid">
+            <!-- Stats -->
+            <div class="card stat-card">
+                <h3>Günlük Ciro</h3>
+                <p id="total-sales">0.00 TL</p>
+            </div>
+            <div class="card stat-card">
+                <h3>İşlem Sayısı</h3>
+                <p id="transaction-count">0</p>
+            </div>
+            <div class="card stat-card">
+                <h3>Kayıtlı Müşteri</h3>
+                <p id="customer-count">0</p>
+            </div>
+
+            <!-- Live Feed -->
+            <div class="card wide-card">
+                <h3>Canlı İşlemler</h3>
+                <ul id="transaction-feed">
+                    <li class="placeholder">İşlemler yükleniyor...</li>
+                </ul>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="card">
+                <h3>Liderlik Tablosu (Top Spenders)</h3>
+                <ol id="leaderboard">
+                    <!-- Dynamic -->
+                </ol>
+            </div>
+
+            <!-- Quick Registration -->
+            <div class="card">
+                <h3>Hızlı Kart Kaydı (Özel Kart)</h3>
+                <form id="reg-form">
+                    <input type="text" id="reg-card" placeholder="Kart ID (NFC)" required>
+                    <input type="text" id="reg-name" placeholder="Müşteri Adı" required>
+                    <select id="reg-tier">
+                        <option value="Bronze">Bronze</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Gold">Gold</option>
+                        <option value="Platinum">Platinum</option>
+                    </select>
+                    <button type="submit">KAYDET</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function updateStats() {
+            try {
+                const resp = await fetch('/api/rapor/gunluk');
+                const data = await resp.json();
+                document.getElementById('total-sales').innerText = data.total_sales.toFixed(2) + ' TL';
+                document.getElementById('transaction-count').innerText = data.transaction_count;
+                document.getElementById('customer-count').innerText = data.customer_count || 0;
+
+                // Live Feed Güncelleme
+                const feed = document.getElementById('transaction-feed');
+                if (data.transactions && data.transactions.length > 0) {
+                    feed.innerHTML = '';
+                    // Son 5 işlemi göster (Tersten)
+                    data.transactions.slice(-5).reverse().forEach(tx => {
+                        const li = document.createElement('li');
+                        li.className = 'feed-item';
+                        li.innerHTML = `<span class="tx-time">${tx.time}</span>
+                                        <span class="tx-desc">${tx.cashier} -> ${tx.amount} TL</span>`;
+                        feed.appendChild(li);
+                    });
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function updateLeaderboard() {
+            try {
+                const resp = await fetch('/api/leaderboard');
+                const data = await resp.json();
+                const list = document.getElementById('leaderboard');
+                list.innerHTML = '';
+                data.forEach(user => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="u-name">${user.name}</span> 
+                                   <span class="u-tier ${user.tier.toLowerCase()}">${user.tier}</span>
+                                   <span class="u-points">${user.points} Puan</span>`;
+                    list.appendChild(li);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        document.getElementById('reg-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const card = document.getElementById('reg-card').value;
+            const name = document.getElementById('reg-name').value;
+            const tier = document.getElementById('reg-tier').value;
+
+            try {
+                const resp = await fetch('/api/kart_tanit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ card_id: card, name: name, tier: tier })
+                });
+                const res = await resp.json();
+                alert(res.message);
+                updateLeaderboard();
+            } catch (e) { console.error(e); }
+        });
+
+        setInterval(updateStats, 5000);
+        setInterval(updateLeaderboard, 10000);
+        updateStats();
+        updateLeaderboard();
+
+        // Hide loader when content is ready
+        function hideLoader() {
+            const loader = document.getElementById('loader');
+            if (!loader) return;
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }
+
+        window.addEventListener('load', () => setTimeout(hideLoader, 1000));
+
+        // Failsafe: Hide loader after 5 seconds anyway
+        setTimeout(hideLoader, 5000);
+    </script>
+</body>
+
+</html>

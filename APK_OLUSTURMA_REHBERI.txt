@@ -1,0 +1,56 @@
+# Android APK Oluşturma Rehberi
+
+Bu proje Python ve Kivy kullanılarak hazırlanmıştır. APK dosyasını oluşturmak için Linux tabanlı bir ortama (veya Google Colab'a) ihtiyacınız vardır. Windows üzerinde doğrudan APK oluşturmak zordur.
+
+## 1. Hazırlık
+`pos_app.py` dosyasındaki `SERVER_IP` satırını bilgisayarınızın IP adresiyle değiştirin:
+```python
+SERVER_IP = "http://192.168.1.X:5000/api"  # Bilgisayarınızın IP'si
+```
+
+## 2. Google Colab ile APK Oluşturma (En Kolay Yol)
+1.  Google Colab'ı açın (colab.research.google.com).
+2.  Yeni bir not defteri oluşturun.
+3.  Aşağıdaki komutları sırasıyla çalıştırın:
+
+```bash
+!pip install buildozer cython==0.29.33
+!sudo apt-get install -y \
+    python3-pip \
+    build-essential \
+    git \
+    python3 \
+    python3-dev \
+    ffmpeg \
+    libsdl2-dev \
+    libsdl2-image-dev \
+    libsdl2-mixer-dev \
+    libsdl2-ttf-dev \
+    libportmidi-dev \
+    libswscale-dev \
+    libavformat-dev \
+    libavcodec-dev \
+    zlib1g-dev
+
+!buildozer init
+```
+4.  Sol taraftaki dosya simgesine tıklayın ve `pos_app.py` (adını `main.py` olarak yükleyin) dosyasını yükleyin.
+5.  Oluşan `buildozer.spec` dosyasını açın ve şu satırları düzenleyin:
+    *   `title = MarketBankPOS`
+    *   `package.name = marketbank`
+    *   `package.domain = org.test`
+    *   `requirements = python3,kivy,requests`
+    *   `android.permissions = INTERNET`
+6.  Son olarak şu komutu çalıştırın (yaklaşık 15-20 dk sürer):
+```bash
+!buildozer -v android debug
+```
+7.  İşlem bitince `bin` klasöründe `.apk` dosyanız hazır olacaktır. Telefonunuza indirip kurun.
+
+## 3. Bilgisayarda Test Etme
+APK oluşturmadan önce bilgisayarınızda test edebilirsiniz:
+1.  `market_bank_core.py` (Sunucu) çalıştırın.
+2.  `cashier_gui.py` (Kasa) çalıştırın.
+3.  `pos_app.py` (POS Simülasyonu) çalıştırın.
+
+Kasa'dan ödeme gönderdiğinizde, POS ekranında belirmelidir.

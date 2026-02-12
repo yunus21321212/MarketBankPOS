@@ -1,0 +1,4 @@
+flask
+requests
+kivy
+flask-cors

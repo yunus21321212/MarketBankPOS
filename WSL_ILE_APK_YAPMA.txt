@@ -1,0 +1,58 @@
+# Windows'ta APK Oluşturma (Google Colab Olmadan) - WSL Yöntemi
+
+Windows bilgisayarında doğrudan APK **üretilemez**. Ancak Windows içine **Linux** kurarak bunu yapabilirsin. Bu yönteme **WSL (Windows Subsystem for Linux)** denir.
+
+Bu işlem biraz daha **zordur** ve internetinden yaklaşık **2-3 GB** veri indirir.
+
+## Adım 1: Ubuntu Kurulumu (WSL)
+1.  **Başlat** menüsünü aç, `cmd` yaz ve **Yönetici Olarak Çalıştır** de.
+2.  Şu komutu yapıştır ve Enter'a bas:
+    ```cmd
+    wsl --install
+    ```
+3.  İşlem bitince bilgisayarını **YENİDEN BAŞLAT**.
+4.  Açılışta otomatik olarak **Ubuntu** terminali açılacak (veya Başlat menüsünden `Ubuntu` yazıp açabilirsin).
+5.  Senden bir kullanıcı adı (`kaadi`) ve şifre isteyecek. Basit bir şifre belirle (yazarken şifre görünmez, normaldir).
+
+## Adım 2: Gerekli Araçları Yükleme
+Ubuntu terminaline şu komutları sırasıyla yapıştırıp Enter'a bas (Şifre sorarsa belirlediğin şifreyi gir):
+
+```bash
+sudo apt update
+sudo apt install -y python3-pip build-essential git python3 python3-dev ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev openjdk-17-jdk unzip
+```
+
+Son olarak Buildozer aracı:
+```bash
+pip3 install buildozer cython==0.29.33 --break-system-packages
+
+# Buildozer komutunun çalışması için PATH ayarını yap:
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## Adım 3: Dosyaları Hazırla
+Şimdi proje dosyalarını Ubuntu'nun içine kopyalamalıyız.
+1.  Ubuntu terminaline şu komutu yazarak masaüstüne git:
+    ```bash
+    cd /mnt/c/Users/yunus1/Desktop/satış\ b\ pilan
+    ```
+    *(Not: Klasör ismindeki boşluklar için `\` kullandık)*
+
+## Adım 4: APK Üretme
+Artık APK'yı üretebiliriz:
+
+```bash
+# Hata almamak için pip kısıtlamasını kaldır:
+export PIP_BREAK_SYSTEM_PACKAGES=1
+
+buildozer -v android debug
+```
+
+Bu işlem ilk seferde **30 dakika** sürebilir çünkü Android SDK (yazılım geliştirme kiti) indirecektir.
+
+## Sonuç
+İşlem bittiğinde, klasörün içinde `bin` diye bir klasör oluşacak. APK dosyan orada olacak!
+
+---
+> **Not:** Eğer hata alırsan veya bu işlem çok karışık geldiyse Google Colab yöntemine geri dönmek en kolayıdır. Çünkü Colab'da bu kurulumlar hazır gelir.

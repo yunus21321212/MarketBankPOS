@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketBank | Premium Web Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+    <!-- Premium Loader -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>MarketBank Hazırlanıyor...</p>
+    </div>
+
+    <!-- Security PIN Overlay (NEW) -->
+    <div id="security-overlay"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; align-items: center; justify-content: center;">
+        <div class="glass-card login-card text-center" style="max-width: 400px;">
+            <h2>🔒 Güvenlik Kontrolü</h2>
+            <p style="margin-bottom: 20px; color: #888;">Siteye erişmek için güvenlik şifresini girin</p>
+            <form id="security-form">
+                <input type="password" id="security-pin" placeholder="4 Haneli Şifre (1234)" maxlength="4" required
+                    style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;">
+                <button type="submit">DOĞRULA</button>
+            </form>
+            <p id="security-error" style="color: var(--accent); margin-top: 10px; display: none;">Hatalı Şifre!</p>
+            <p id="security-attempts" style="color: #888; margin-top: 10px;">Kalan Hak: 3</p>
+        </div>
+    </div>
+
+    <!-- QR Code / Receipt Modal -->
+    <div id="qr-modal" class="modal-overlay" style="display: none;">
+        <div class="glass-card login-card text-center">
+            <h3 id="qr-title">Dijital Fiş</h3>
+            <div id="qrcode" style="display: flex; justify-content: center; margin: 20px 0;"></div>
+            <p id="qr-desc">Telefonunuzla tarayarak detayları görebilirsiniz.</p>
+            <button class="btn-clear" onclick="closeQRModal()">Kapat</button>
+        </div>
+    </div>
+
+    <!-- POS Pending Overlay -->
+    <div id="pos-overlay" style="display: none;">
+        <div class="glass-card login-card text-center">
+            <h2 class="pulse">💳 POS BEKLENİYOR</h2>
+            <p>Lütfen kartınızı POS cihazına (NFC) okutun...</p>
+            <h1 id="wait-amount" style="margin: 20px 0; color: var(--primary);">0.00 TL</h1>
+            <div class="spinner"></div>
+            <button class="btn-clear" onclick="cancelPayment()" style="margin-top: 20px;">İptal Et</button>
+        </div>
+    </div>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay" style="display: none;">
+        <div class="glass-card login-card text-center">
+            <h2>MarketBank Giriş</h2>
+            <form id="login-form">
+                <input type="text" id="login-id" placeholder="Kullanıcı ID (ADMIN_U veya WORKER_1)" required>
+                <input type="password" id="login-pw" placeholder="Şifre" required>
+                <button type="submit">GİRİŞ YAP</button>
+            </form>
+            <p id="login-error" style="color: var(--accent); margin-top: 10px; display: none;">Hatalı Giriş!</p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card wide-card"
+            style="display: flex; justify-content: space-between; align-items: center; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--primary);">
+            <div style="font-weight: 600; color: var(--primary);">🏦 Dedicated Bank Portal is now available!</div>
+            <a href="/bank" class="btn-primary" style="text-decoration: none; padding: 8px 20px; font-size: 0.9rem;">GO
+                TO BANK PORTAL</a>
+        </div>
+
+        <!-- Role Selector Hub (Client Side Role Check) -->
+        <div id="role-hub-admin" class="card wide-card admin-only">
+            <h3>👑 Admin Paneli</h3>
+            <div class="hub-buttons">
+                <button onclick="showSection('stats')">İstatistikler</button>
+                <button onclick="showSection('users')">Kullanıcı Yönetimi</button>
+                <button onclick="showSection('approvals')">Onay Bekleyenler (<span
+                        id="approval-count">0</span>)</button>
+                <button onclick="showSection('bank')" style="background: var(--primary);">🏦 BANKA</button>
+                <button onclick="unlockArduino()" style="background: var(--accent); color: white;">🔓 ARDUINO KİLİDİNİ
+                    AÇ</button>
+            </div>
+        </div>
+
+        <div id="role-hub-cashier" class="card wide-card cashier-only">
+            <h3>👨💼 Kasiyer Ekranı</h3>
+            <div class="pos-main">
+                <div id="scanner-container" style="display: none; margin-bottom: 20px;">
+                    <div id="reader"
+                        style="width: 100%; max-width: 500px; margin: 0 auto; border-radius: 12px; overflow: hidden;">
+                    </div>
+                    <button class="btn-clear" onclick="stopScanner()" style="width: 100%; margin-top: 10px;">Kamerayı
+                        Kapat</button>
+                </div>
+                <div class="pos-search">
+                    <input type="text" id="barcode-input" placeholder="Barkod Okutun veya İsimle Arayın..."
+                        onkeypress="handleBarcode(event)">
+                    <button class="btn-scan" onclick="startScanner('pos')">📷 TARA</button>
+                    <button onclick="showSection('bank')" style="background: var(--primary); margin-left: 5px;">🏦
+                        BANKA</button>
+                    <div id="search-results"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="role-hub-stock" class="card wide-card stock-only">
+            <h3>📦 Stok Yönetimi</h3>
+            <div id="stock-alerts" class="alert-box"></div>
+            <table id="stock-table">
+                <thead>
+                    <tr>
+                        <th>Barkod</th>
+                        <th>Ürün</th>
+                        <th>Stok</th>
+                        <th>Min</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="stock-body"></tbody>
+            </table>
+        </div>
+
+        <!-- Global Sections (Shown/Hidden by JS) -->
+        <div id="stats-section" class="card wide-card">
+            <h3>Detaylı Raporlar</h3>
+            <div class="report-grid">
+                <div class="card stat-card">
+                    <h3>Günlük Ciro</h3>
+                    <p id="total-sales">0.00 TL</p>
+                </div>
+                <div class="card stat-card">
+                    <h3>İşlem Sayısı</h3>
+                    <p id="transaction-count">0</p>
+                </div>
+                <div class="card stat-card admin-only">
+                    <h3>Kayıtlı Müşteri</h3>
+                    <p id="customer-count">0</p>
+                </div>
+            </div>
+            <div id="advanced-report" class="admin-only" style="margin-top: 20px;">
+                <h4>Ödeme Yöntemi Dağılımı</h4>
+                <div id="payment-chart" style="height: 100px; display: flex; align-items: flex-end; gap: 10px;">
+                    <!-- Simple visual bars -->
+                </div>
+            </div>
+        </div>
+
+        <div id="approvals-section" class="card wide-card admin-only" style="display: none;">
+            <h3>Onay Bekleyen İşlemler</h3>
+            <div id="approval-list"></div>
+        </div>
+
+        <!-- POS Content -->
+        <div id="pos-section" class="card wide-card cashier-only">
+            <div class="pos-grid">
+                <div class="pos-cart">
+                    <h4>Sepet</h4>
+                    <ul id="cart-items"></ul>
+                    <div class="cart-total">Toplam: <span id="cart-total">0.00</span> TL</div>
+                    <div id="active-discount" style="font-size: 0.8rem; color: #10b981; text-align: right;"></div>
+                    <div class="cart-actions">
+                        <button class="btn-card" onclick="completeSale('card')">Kartla Öde</button>
+                        <button class="btn-cash" onclick="completeSale('cash')">Nakit Öde</button>
+                        <button class="btn-qr" onclick="completeSale('qr')">QR ile Öde</button>
+                        <button class="btn-discount" onclick="requestDiscount()">İndirim Uygula</button>
+                        <button class="btn-refund" onclick="requestRefund()">İade/İptal Talebi</button>
+                        <button class="btn-clear" onclick="clearCart()">Sıfırla</button>
+                    </div>
+                </div>
+                <div class="pos-quick-buttons">
+                    <h4>Hızlı Ürünler</h4>
+                    <div id="quick-items"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- --- BANKA BÖLÜMÜ --- -->
+    <div id="bank-section" class="card wide-card" style="display: none;">
+        <div class="card">
+            <h3>Hesap Bilgilerim</h3>
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <p style="font-size: 0.8rem; color: #94a3b8;">HESAP IBAN (Transfer Kodu):</p>
+                <h2 id="bank-iban" style="color: var(--primary); letter-spacing: 2px;">Giriş Yapın...</h2>
+            </div>
+        </div>
+
+        <div class="report-grid">
+            <div class="card">
+                <h3>IBAN Transferi</h3>
+                <form id="transfer-form" onsubmit="handleTransfer(event)">
+                    <input type="text" id="t-to-iban" placeholder="Alıcı IBAN (MBANK-XXXXX)" required>
+                    <input type="number" step="0.01" id="t-amount" placeholder="Tutar (TL)" required>
+                    <button type="submit" style="background: #8b5cf6;">PARA GÖNDER</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>NFC Para Yükle</h3>
+                <p style="font-size: 0.7rem; color: #94a3b8;">Tutarı girip POS sayfasını açın.</p>
+                <form id="nfc-load-form" onsubmit="startNFCLoad(event)">
+                    <input type="number" step="0.01" id="load-amount" placeholder="Yükleme Tutarı" required>
+                    <button type="submit" style="background: #10b981;">NFC YÜKLEMEYI BAŞLAT</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card wide-card">
+        <h3>Canlı İşlemler</h3>
+        <ul id="transaction-feed"></ul>
+    </div>
+
+    <div id="admin-extras" class="admin-only" style="display: contents;">
+        <div class="card">
+            <h3>Liderlik Tablosu</h3>
+            <ol id="leaderboard"></ol>
+        </div>
+        <div class="card">
+            <h3>Hızlı Kart Kaydı</h3>
+            <form id="reg-form">
+                <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+                    <input type="text" id="reg-card" placeholder="Gerçek Kart ID" required style="margin-bottom:0;">
+                    <button type="button" class="btn-scan" onclick="startScanner('card_reg')"
+                        style="padding: 10px; width: 60px;">📷</button>
+                    <button type="button" class="btn-qr" onclick="startNFCForReg()"
+                        style="padding: 10px; height: auto; font-size: 0.8rem;">📡 NFC</button>
+                </div>
+                <input type="number" id="reg-short" placeholder="Arduino Kısa Kodu (1-99)" min="1" max="99">
+                <input type="text" id="reg-name" placeholder="Müşteri Adı" required>
+                <select id="reg-tier">
+                    <option value="Bronze">Bronze</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Gold">Gold</option>
+                </select>
+                <button type="submit">KAYDET</button>
+            </form>
+        </div>
+        <div class="card">
+            <h3>Yeni Ürün Tanımla</h3>
+            <form id="new-product-form">
+                <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+                    <input type="text" id="p-barcode" placeholder="Barkod / QR ID" required style="margin-bottom:0;">
+                    <button type="button" class="btn-scan" onclick="startScanner('new_product')"
+                        style="padding: 10px; width: 60px;">📷</button>
+                </div>
+                <input type="text" id="p-name" placeholder="Ürün Adı" required>
+                <input type="number" step="0.01" id="p-price" placeholder="Fiyat (TL)" required>
+                <input type="number" id="p-stock" placeholder="Başlangıç Stoğu" value="100">
+                <button type="submit" class="btn-pay" style="background:#10b981;">ÜRÜNÜ EKLE</button>
+            </form>
+        </div>
+    </div>
+    </div>
+    </div>
+    <script>
+        async function updateStats() {
+            try {
+                const resp = await fetch('/api/rapor/gunluk');
+                const data = await resp.json();
+                document.getElementById('total-sales').innerText = data.total_sales.toFixed(2) + ' TL';
+                document.getElementById('transaction-count').innerText = data.transaction_count;
+                document.getElementById('customer-count').innerText = data.customer_count;
+
+                const feed = document.getElementById('transaction-feed');
+                if (data.transactions && data.transactions.length > 0) {
+                    feed.innerHTML = data.transactions.reverse().map(tx => `
+                        <li class="feed-item">
+                            <span class="tx-time">${tx.time}</span>
+                            <span>${tx.cashier} -> ${tx.amount} TL</span>
+                        </li>
+                    `).join('');
+                }
+
+                // Payment Chart (Simple Bar logic)
+                const chart = document.getElementById('payment-chart');
+                if (chart) {
+                    const cashSales = data.transactions.filter(tx => tx.payment === 'cash').reduce((s, t) => s + t.amount, 0);
+                    const cardSales = data.transactions.filter(tx => tx.payment === 'card').reduce((s, t) => s + t.amount, 0);
+                    const max = Math.max(cashSales, cardSales, 1);
+                    chart.innerHTML = `
+                        <div class="bar-container">
+                            <div class="bar cash" style="height: ${(cashSales / max) * 100}%"></div>
+                            <span>Nakit</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar card" style="height: ${(cardSales / max) * 100}%"></div>
+                            <span>Kart</span>
+                        </div>
+                    `;
+                }
+            } catch (e) { console.error("Stats Error:", e); }
+        }
+
+        function showReceipt(data) {
+            console.log("Simulating Receipt...", data);
+            const total = data.total ? data.total : (data.final_amount || 0);
+
+            // Generate QR Digital Receipt
+            document.getElementById('qr-modal').style.display = 'flex';
+            document.getElementById('qr-title').innerText = "Dijital Fiş";
+            document.getElementById('qr-desc').innerText = `${total.toFixed(2)} TL tutarında işlem tamamlandı.`;
+
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: `MarketBank Receipt ID: ${Date.now()}\nTotal: ${total} TL`,
+                width: 180,
+                height: 180
+            });
+
+            // Standard prompt
+            const msg = `🧾 MARKETBANK FİŞ\n------------------\nToplam: ${total.toFixed(2)} TL\nTarih: ${new Date().toLocaleString()}\n------------------\nE-Posta gönderilsin mi?`;
+            setTimeout(() => {
+                if (confirm(msg)) {
+                    alert("Fiş e-posta olarak gönderildi! 📧");
+                }
+            }, 500);
+        }
+
+        function closeQRModal() {
+            document.getElementById('qr-modal').style.display = 'none';
+        }
+
+        async function updatePOSStatus() {
+            try {
+                const resp = await fetch('/api/transaction/status');
+                const data = await resp.json();
+                const statusDiv = document.getElementById('pos-status');
+                const amountDiv = document.getElementById('pos-amount');
+
+                if (data.status === 'pending') {
+                    statusDiv.innerText = "ÖDEME BEKLENİYOR (POS)...";
+                    statusDiv.className = "pos-pending";
+                    amountDiv.innerText = data.amount + " TL";
+                } else {
+                    statusDiv.innerText = "İşlem Bekleniyor (Idle)";
+                    statusDiv.className = "pos-idle";
+                    amountDiv.innerText = "--";
+                }
+            } catch (e) { }
+        }
+
+        async function updateLeaderboard() {
+            const resp = await fetch('/api/leaderboard');
+            const data = await resp.json();
+            document.getElementById('leaderboard').innerHTML = data.map(u => `
+                <li>${u.name} - <span class="u-tier ${u.tier.toLowerCase()}">${u.tier}</span> (${u.points} Puan)</li>
+            `).join('');
+        }
+
+        document.getElementById('reg-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resp = await fetch('/api/kart_tanit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    card_id: document.getElementById('reg-card').value,
+                    short_id: document.getElementById('reg-short').value,
+                    name: document.getElementById('reg-name').value,
+                    tier: document.getElementById('reg-tier').value
+                })
+            });
+            const res = await resp.json();
+            alert(res.message);
+            updateStats();
+            updateLeaderboard();
+        });
+
+        document.getElementById('new-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resp = await fetch('/api/products/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    barcode: document.getElementById('p-barcode').value,
+                    name: document.getElementById('p-name').value,
+                    price: parseFloat(document.getElementById('p-price').value),
+                    stock: parseInt(document.getElementById('p-stock').value),
+                    min_stock: 10,
+                    category: "Genel"
+                })
+            });
+            const res = await resp.json();
+            alert(res.message);
+            fetchProducts();
+            e.target.reset();
+        });
+
+        // Role-Based Logic
+        let currentUser = null;
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('login-id').value;
+            const password = document.getElementById('login-pw').value;
+            const resp = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, password: password })
+            });
+
+            if (resp.ok) {
+                const data = await resp.json();
+                currentUser = data;
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('main-container').style.display = 'block';
+
+                // Bank UI Update
+                document.getElementById('bank-iban').innerText = data.iban;
+                const myQr = document.getElementById('my-iban-qr');
+                if (myQr) {
+                    myQr.innerHTML = '';
+                    new QRCode(myQr, { text: data.iban, width: 128, height: 128 });
+                }
+
+                applyRolePermissions(data.role);
+                updateStats(); updateLeaderboard(); updatePOSStatus();
+                setInterval(updateStats, 5000);
+                setInterval(updatePOSStatus, 2000);
+                setInterval(updateLeaderboard, 10000);
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        });
+
+        // POS Logic
+        let cart = [];
+        let allProducts = {};
+
+        async function fetchProducts() {
+            const resp = await fetch('/api/products');
+            allProducts = await resp.json();
+            renderQuickItems();
+            renderStockTable();
+        }
+
+        function renderQuickItems() {
+            const container = document.getElementById('quick-items');
+            container.innerHTML = '';
+            Object.keys(allProducts).slice(0, 8).forEach(bc => {
+                const p = allProducts[bc];
+                const btn = document.createElement('button');
+                btn.className = 'quick-btn';
+                btn.innerText = `${p.name}\n${p.price} TL`;
+                btn.onclick = () => addToCart(bc);
+                container.appendChild(btn);
+            });
+        }
+
+        function addToCart(barcode) {
+            const product = allProducts[barcode];
+            if (!product) return;
+            const existing = cart.find(i => i.barcode === barcode);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ barcode, name: product.name, price: product.price, qty: 1 });
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cart-items');
+            list.innerHTML = cart.map((item, idx) => `
+                <li>${item.name} x${item.qty} - ${(item.price * item.qty).toFixed(2)} TL 
+                <button onclick="removeFromCart(${idx})">X</button></li>
+            `).join('');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            document.getElementById('cart-total').innerText = total.toFixed(2);
+        }
+
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            renderCart();
+        }
+
+        async function completeSale(type) {
+            if (cart.length === 0) return;
+            const cashierName = currentUser ? currentUser.name : "Bilinmeyen";
+            const totalWithDiscount = parseFloat(document.getElementById('cart-total').innerText);
+
+            const resp = await fetch('/api/sale/complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    cart: cart,
+                    payment_type: type,
+                    cashier_id: cashierName,
+                    final_amount: totalWithDiscount
+                })
+            });
+            const res = await resp.json();
+
+            if (res.status === 'pending') {
+                document.getElementById('pos-overlay').style.display = 'flex';
+                document.getElementById('wait-amount').innerText = totalWithDiscount.toFixed(2) + " TL";
+                startPOSPolling();
+            } else if (res.status === 'success') {
+                alert("Satış Tamamlandı! (Nakit)");
+                showReceipt({ "total": totalWithDiscount });
+                clearCart(); updateStats(); fetchProducts();
+            } else {
+                alert("Hata: " + res.message);
+            }
+        }
+
+        let pollingInterval = null;
+        function startPOSPolling() {
+            if (pollingInterval) clearInterval(pollingInterval);
+            pollingInterval = setInterval(async () => {
+                const resp = await fetch('/api/transaction/status');
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    clearInterval(pollingInterval);
+                    document.getElementById('pos-overlay').style.display = 'none';
+                    if (data.type === 'load') {
+                        alert("Bakiye Başarıyla Yüklendi! 💰");
+                    } else {
+                        alert("Ödeme Başarıyla Alındı! ✅");
+                        showReceipt({ "total": data.final_amount });
+                        clearCart(); updateStats(); fetchProducts();
+                    }
+                    updateStats();
+                } else if (data.status === 'failed') {
+                    clearInterval(pollingInterval);
+                    document.getElementById('pos-overlay').style.display = 'none';
+                    alert("İşlem Başarısız! ❌");
+                }
+            }, 1000);
+        }
+
+        async function cancelPayment() {
+            // Basitlik için sadece UI'da kapatıyoruz, backend status resetlenebilir
+            clearInterval(pollingInterval);
+            document.getElementById('pos-overlay').style.display = 'none';
+        }
+
+        async function requestDiscount() {
+            if (cart.length === 0) return;
+            const amount = prompt("Uygulanacak indirim tutarı (TL):");
+            if (!amount) return;
+            const resp = await fetch('/api/admin/request_approval', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'discount',
+                    details: `${amount} TL İndirim Uygulama`,
+                    amount: parseFloat(amount),
+                    cashier_id: currentUser.name
+                })
+            });
+            const data = await resp.json();
+            alert("İndirim talebi Admin'e gönderildi. Onay beklendiğinde otomatik uygulanacaktır.");
+            startApprovalPolling(data.request_id, 'discount', parseFloat(amount));
+        }
+
+        let approvalInterval = null;
+        function startApprovalPolling(reqId, type, value) {
+            if (approvalInterval) clearInterval(approvalInterval);
+            approvalInterval = setInterval(async () => {
+                const resp = await fetch('/api/admin/pending_approvals');
+                const allPending = await resp.json();
+
+                // Check if our request is still pending
+                const stillPending = allPending.find(r => r.id === reqId);
+
+                if (!stillPending) {
+                    // Check if it was approved (we need a history or check it's not in pending)
+                    // Simplified: We assume if it's gone from pending, we check status from a dedicated endpoint
+                    const checkResp = await fetch(`/api/admin/check_request/${reqId}`);
+                    const statusData = await checkResp.json();
+
+                    if (statusData.status === 'approved') {
+                        clearInterval(approvalInterval);
+                        if (type === 'discount') {
+                            applyApprovedDiscount(value);
+                        } else if (type === 'refund') {
+                            alert("İade/İptal İşlemi Onaylandı! ✅");
+                        }
+                    } else if (statusData.status === 'rejected') {
+                        clearInterval(approvalInterval);
+                        alert("Talebiniz REDDEDİLDİ! ❌");
+                    }
+                }
+            }, 3000);
+        }
+
+        function applyApprovedDiscount(val) {
+            const display = document.getElementById('active-discount');
+            display.innerText = `-${val.toFixed(2)} TL İndirim Uygulandı`;
+            const currentTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            document.getElementById('cart-total').innerText = (currentTotal - val).toFixed(2);
+            alert("İndirim Admin tarafından onaylandı ve uygulandı! 🎉");
+        }
+
+        async function requestRefund() {
+            const details = prompt("İptal/İade edilecek işlem detayları:");
+            if (!details) return;
+            await fetch('/api/admin/request_approval', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'refund',
+                    details: details,
+                    cashier_id: currentUser.name
+                })
+            });
+            alert("İade/İptal talebi Admin'e gönderildi. Onay bekleniyor...");
+        }
+
+        function clearCart() {
+            cart = [];
+            document.getElementById('active-discount').innerText = '';
+            renderCart();
+        }
+
+        function handleBarcode(e) {
+            const query = e.target.value.toLowerCase();
+            const results = document.getElementById('search-results');
+
+            if (e.key === 'Enter') {
+                if (allProducts[e.target.value]) {
+                    addToCart(e.target.value);
+                    e.target.value = '';
+                    results.innerHTML = '';
+                }
+                return;
+            }
+
+            // Real-time search
+            if (query.length > 1) {
+                const matches = Object.keys(allProducts).filter(bc =>
+                    allProducts[bc].name.toLowerCase().includes(query) || bc.includes(query)
+                );
+                results.innerHTML = matches.map(bc => `
+                    <div class="search-item" onclick="addToCart('${bc}'); document.getElementById('barcode-input').value=''; document.getElementById('search-results').innerHTML=''">
+                        ${allProducts[bc].name} - ${allProducts[bc].price} TL
+                    </div>
+                `).join('');
+            } else {
+                results.innerHTML = '';
+            }
+        }
+
+        function renderStockTable() {
+            const body = document.getElementById('stock-body');
+            const alerts = document.getElementById('stock-alerts');
+            body.innerHTML = '';
+            alerts.innerHTML = '';
+            Object.keys(allProducts).forEach(bc => {
+                const p = allProducts[bc];
+                if (p.stock <= p.min_stock) {
+                    alerts.innerHTML += `<div class="low-stock-warning">⚠️ ${p.name} Stok Azaldı! (${p.stock})</div>`;
+                }
+                body.innerHTML += `
+                    <tr>
+                        <td>${bc}</td>
+                        <td>${p.name}</td>
+                        <td class="${p.stock <= p.min_stock ? 'red' : ''}">${p.stock}</td>
+                        <td>${p.min_stock}</td>
+                        <td><button onclick="restock('${bc}')">+</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function restock(bc) {
+            const qty = prompt("Eklenecek stok adedi:");
+            if (!qty) return;
+            await fetch('/api/products/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    barcode: bc,
+                    stock: allProducts[bc].stock + parseInt(qty),
+                    role: currentUser.role,
+                    user_id: currentUser.name
+                })
+            });
+            fetchProducts();
+        }
+
+        async function fetchApprovals() {
+            if (currentUser.role !== 'admin') return;
+            const resp = await fetch('/api/admin/pending_approvals');
+            const data = await resp.json();
+            document.getElementById('approval-count').innerText = data.length;
+            const list = document.getElementById('approval-list');
+            list.innerHTML = data.length === 0 ? '<p>Bekleyen onay yok.</p>' : data.map(req => `
+                <div class="approval-item card">
+                    <div><strong>${req.type.toUpperCase()}</strong> - ${req.details} (${req.cashier})</div>
+                    <div class="approval-actions">
+                        <button class="btn-approve" onclick="actionApproval(${req.id}, 'approved')">ONAYLA</button>
+                        <button class="btn-reject" onclick="actionApproval(${req.id}, 'rejected')">REDDET</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function actionApproval(id, decision) {
+            await fetch('/api/admin/approve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ request_id: id, decision: decision })
+            });
+            fetchApprovals();
+        }
+
+        // --- CAMERA SCANNER LOGIC ---
+        let html5QrCode = null;
+        function startScanner(context) {
+            document.getElementById('scanner-container').style.display = 'block';
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+
+            html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
+                console.log("Scanned:", decodedText);
+                if (context === 'pos') {
+                    addToCart(decodedText);
+                    stopScanner();
+                } else if (context === 'stock') {
+                    // Quick jump to product in stock table or prompt
+                    const qty = prompt(`${decodedText} için yeni stok miktarı:`);
+                    if (qty) updateStockManually(decodedText, qty);
+                    stopScanner();
+                } else if (context === 'new_product') {
+                    document.getElementById('p-barcode').value = decodedText;
+                    stopScanner();
+                } else if (context === 'card_reg') {
+                    document.getElementById('reg-card').value = decodedText;
+                    stopScanner();
+                }
+            }).catch(err => {
+                alert("Kamera hatası: " + err);
+                stopScanner();
+            });
+        }
+
+        function stopScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('scanner-container').style.display = 'none';
+                    html5QrCode = null;
+                });
+            } else {
+                document.getElementById('scanner-container').style.display = 'none';
+            }
+        }
+
+        async function updateStockManually(bc, qty) {
+            await fetch('/api/products/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    barcode: bc,
+                    stock: parseInt(qty),
+                    role: currentUser.role,
+                    user_id: currentUser.name
+                })
+            });
+            fetchProducts();
+        }
+
+        function showSection(id) {
+            // Hide all first
+            const sections = ['stats-section', 'approvals-section', 'pos-section', 'role-hub-stock', 'bank-section'];
+            sections.forEach(s => {
+                const el = document.getElementById(s);
+                if (el) el.style.display = 'none';
+            });
+
+            const target = document.getElementById(id + '-section');
+            if (target) target.style.display = 'block';
+
+            // Re-apply role permissions to ensure specific role logic is maintained
+            applyRolePermissions(currentUser.role);
+        }
+
+        setInterval(fetchApprovals, 10000);
+
+        function applyRolePermissions(role) {
+            const adminMode = document.querySelectorAll('.admin-only');
+            const cashierMode = document.querySelectorAll('.cashier-only');
+            const stockMode = document.querySelectorAll('.stock-only');
+
+            // Hide all first
+            [...adminMode, ...cashierMode, ...stockMode].forEach(el => el.style.display = 'none');
+
+            if (role === 'admin' || role === 'cashier') {
+                adminMode.forEach(el => el.style.display = 'block');
+                cashierMode.forEach(el => el.style.display = 'block');
+                stockMode.forEach(el => el.style.display = 'block');
+                const grid = document.querySelector('.dashboard-grid');
+                if (grid) grid.style.gridTemplateColumns = window.innerWidth > 900 ? 'repeat(2, 1fr)' : '1fr';
+            } else if (role === 'stock_manager') {
+                stockMode.forEach(el => el.style.display = 'block');
+                document.querySelector('.dashboard-grid').style.gridTemplateColumns = '1fr';
+            }
+            fetchProducts();
+        }
+
+        async function handleTransfer(e) {
+            e.preventDefault();
+            const toIban = document.getElementById('t-to-iban').value;
+            const amount = document.getElementById('t-amount').value;
+
+            const resp = await fetch('/api/bank/transfer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    from_iban: currentUser.iban,
+                    to_iban: toIban,
+                    amount: amount
+                })
+            });
+            const res = await resp.json();
+            if (res.status === 'success') {
+                alert("Para transferi başarılı! ✅");
+                document.getElementById('t-to-iban').value = '';
+                document.getElementById('t-amount').value = '';
+                updateStats();
+            } else {
+                alert("Transfer Hatası: " + res.message);
+            }
+        }
+
+        async function startNFCLoad(e) {
+            e.preventDefault();
+            const amount = document.getElementById('load-amount').value;
+            const resp = await fetch('/api/bank/load_nfc_start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: amount, cashier_id: currentUser.name })
+            });
+            const res = await resp.json();
+            if (res.status === 'success') {
+                document.getElementById('wait-amount').innerText = amount + " TL";
+                document.getElementById('pos-overlay').style.display = 'flex';
+                startPOSPolling();
+            } else {
+                alert("NFC Yükleme başlatılamadı!");
+            }
+        }
+
+        async function startNFCForReg() {
+            if (!('NDEFReader' in window)) {
+                alert("NFC bu cihazda veya tarayıcıda desteklenmiyor.");
+                return;
+            }
+            try {
+                const nfcReader = new NDEFReader();
+                await nfcReader.scan();
+                alert("📡 NFC Aktif: Lütfen kaydetmek istediğiniz kartı telefona yaklaştırın.");
+
+                nfcReader.onreading = event => {
+                    const serialNumber = event.serialNumber.replace(/:/g, "").toUpperCase();
+                    document.getElementById('reg-card').value = serialNumber;
+                    alert("✅ Kart Okundu: " + serialNumber);
+                };
+            } catch (error) {
+                alert("NFC Hatası: " + error);
+            }
+        }
+
+        // ===== SECURITY PIN SYSTEM =====
+        const SECURITY_PIN = "1234"; // Güvenlik şifresi
+        let securityAttempts = 3;
+
+        document.getElementById('security-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Kilit kontrolü
+            const lockUntil = localStorage.getItem('siteLockUntil');
+            if (lockUntil && Date.now() < parseInt(lockUntil)) {
+                const remainingMin = Math.ceil((parseInt(lockUntil) - Date.now()) / 60000);
+                alert(`🔒 Site kilitli! ${remainingMin} dakika sonra tekrar deneyin.`);
+                return;
+            }
+
+            const enteredPin = document.getElementById('security-pin').value;
+
+            if (enteredPin === SECURITY_PIN) {
+                // Doğru şifre
+                document.getElementById('security-overlay').style.display = 'none';
+                document.getElementById('login-overlay').style.display = 'flex';
+                localStorage.removeItem('siteLockUntil'); // Kilidi kaldır
+            } else {
+                // Yanlış şifre
+                securityAttempts--;
+                document.getElementById('security-attempts').textContent = `Kalan Hak: ${securityAttempts}`;
+                document.getElementById('security-error').style.display = 'block';
+                document.getElementById('security-pin').value = '';
+
+                if (securityAttempts <= 0) {
+                    // 3 hak bitti - 5 dakika kilitle
+                    const lockUntil = Date.now() + (5 * 60 * 1000); // 5 dakika
+                    localStorage.setItem('siteLockUntil', lockUntil);
+                    alert('🔒 3 yanlış deneme! Site 5 dakika kilitlendi.');
+                    document.getElementById('security-overlay').innerHTML = `
+                        <div class="glass-card login-card text-center" style="max-width: 400px;">
+                            <h2>🔒 SİTE KİLİTLİ</h2>
+                            <p style="color: var(--accent); font-size: 1.2rem;">5 dakika sonra tekrar deneyin</p>
+                            <div class="spinner"></div>
+                        </div>
+                    `;
+
+                    // 5 dakika sonra sayfayı yenile
+                    setTimeout(() => location.reload(), 5 * 60 * 1000);
+                }
+            }
+        });
+
+        // Sayfa yüklendiğinde kilit kontrolü
+        window.addEventListener('load', function () {
+            const lockUntil = localStorage.getItem('siteLockUntil');
+            if (lockUntil && Date.now() < parseInt(lockUntil)) {
+                const remainingMin = Math.ceil((parseInt(lockUntil) - Date.now()) / 60000);
+                document.getElementById('security-overlay').innerHTML = `
+                    <div class="glass-card login-card text-center" style="max-width: 400px;">
+                        <h2>🔒 SİTE KİLİTLİ</h2>
+                        <p style="color: var(--accent); font-size: 1.2rem;">${remainingMin} dakika sonra tekrar deneyin</p>
+                        <div class="spinner"></div>
+                    </div>
+                `;
+                setTimeout(() => location.reload(), parseInt(lockUntil) - Date.now());
+            }
+        });
+
+        // Arduino Kilit Açma Fonksiyonu
+        async function unlockArduino() {
+            if (!confirm('Arduino kilidini açmak istediğinizden emin misiniz?')) return;
+
+            try {
+                const response = await fetch('/api/arduino/unlock', { method: 'POST' });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    alert('✅ ' + data.message);
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Bağlantı hatası: ' + error);
+            }
+        }
+
+        window.onload = () => {
+            // NFC Suppport Check for Admin Dashboard
+            if (!('NDEFReader' in window)) {
+                const nfcBtn = document.querySelector('.btn-qr[onclick="startNFCForReg()"]');
+                if (nfcBtn) nfcBtn.style.display = 'none';
+            }
+
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+            }, 1000);
+        };
+    </script>
+</body>
+
+</html>

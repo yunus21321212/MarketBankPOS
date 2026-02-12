@@ -1,0 +1,34 @@
+# 🚀 GitHub Actions ile APK Nasıl Yapılır?
+
+Harika bir seçim! Kendi bilgisayarınızı yormadan, GitHub sunucularında APK oluşturacağız.
+
+## 1. Adım: Dosyaları Hazırladım
+Ben sizin için gerekli olan `.github/workflows/build.yml` dosyasını oluşturdum. Bu dosya GitHub'a "Bana APK yap" emrini verecek.
+
+## 2. Adım: GitHub'a Yükleme
+Şimdi bu klasördeki dosyaları GitHub'a yüklemeniz gerekiyor.
+Eğer GitHub Desktop kullanıyorsanız:
+1.  Bu klasörü GitHub Desktop'a sürükleyin.
+2.  "Publish repository" diyerek yayınlayın.
+
+Eğer Git komutları kullanıyorsanız (Terminalden):
+```bash
+git init
+git add .
+git commit -m "A101 SOS APK Hazirligi"
+# Buraya kendi repo adresinizi yazin:
+# git remote add origin https://github.com/KULLANICI_ADINIZ/REPO_ADINIZ.git
+# git branch -M main
+# git push -u origin main
+```
+
+## 3. Adım: APK'yı İndirme
+Yükleme bittikten sonra:
+1.  GitHub'da **repolunuza** (proje sayfanıza) gidin.
+2.  Üstteki **"Actions"** sekmesine tıklayın.
+3.  Sol tarafta **"Build A101 SOS APK"** başlığını göreceksiniz.
+4.  Ona tıklayın, yanşıl veya sarı dönen bir daire göreceksiniz (çalışıyor demektir).
+5.  İşlem bitince (Yeşil Tik ✅ olunca) üzerine tıklayın.
+6.  Sayfanın en altına inin, **"Artifacts"** kısmında **"marketbank-apk"** dosyasını görüp indirin.
+
+İşte bu kadar! Bilgisayarınız ısınmadan APK hazır olacak. ☕

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketBank Satış Ekranı</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- ÜST BAR -->
+    <header>
+        <div class="user-info">
+            👤 <span id="cashier-name">Yükleniyor...</span> (<span id="cashier-role">...</span>)
+        </div>
+        <button class="logout-btn" onclick="logout()">ÇIKIŞ</button>
+    </header>
+
+    <div class="main-container">
+        <!-- SOL PANEL: ÜRÜNLER -->
+        <div class="products-panel">
+            <h2>📦 Ürünler</h2>
+            <div class="product-grid" id="product-grid">
+                <!-- Ürünler JS ile buraya gelecek -->
+            </div>
+        </div>
+
+        <!-- SAĞ PANEL: SEPET & İŞLEMLER -->
+        <div class="cart-panel">
+            <h2>🛒 Sepet</h2>
+            <ul id="cart-list">
+                <!-- Sepet öğeleri -->
+            </ul>
+
+            <div class="total-section">
+                <span>TOPLAM:</span>
+                <span id="total-amount">0.00 TL</span>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-clear" onclick="clearCart()">🗑️ Temizle</button>
+                <button class="btn-pay" onclick="startPayment()">💳 ÖDEME AL</button>
+            </div>
+
+            <hr>
+
+            <div class="admin-buttons">
+                <button class="btn-blue" onclick="showModal('balance-modal')">➕ Bakiye Yükle</button>
+                <button class="btn-purple" onclick="showModal('card-modal')">🆔 Kart Tanıt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: BAKİYE YÜKLE -->
+    <div id="balance-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('balance-modal')">&times;</span>
+            <h3>➕ Bakiye Yükle</h3>
+            <input type="text" id="bal-card-id" placeholder="Kart ID">
+            <input type="number" id="bal-amount" placeholder="Tutar (TL)">
+            <button class="btn-green" onclick="addBalance()">Yükle</button>
+        </div>
+    </div>
+
+    <!-- MODAL: KART TANIT -->
+    <div id="card-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('card-modal')">&times;</span>
+            <h3>🆔 Yeni Kart Tanıt</h3>
+            <input type="text" id="new-card-id" placeholder="Kart ID">
+            <input type="text" id="new-customer-name" placeholder="Müşteri Adı">
+            <input type="number" id="new-initial-bal" placeholder="Açılış Bakiyesi" value="0">
+            <button class="btn-purple" onclick="registerCard()">Kaydet</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
